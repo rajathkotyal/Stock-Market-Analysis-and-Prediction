@@ -2,17 +2,17 @@
 # coding: utf-8
 
 # # Project: Stock Market Analysis and Prediction
-# 
+#
 # ## Stock Market Data From Google Finance
-# 
+#
 # ### Introduction
-# 
+#
 #    Stock Market Analysis and Prediction is the project on technical analysis, visualization and prediction using data provided by Google Finance. By looking at data from the stock market, particularly some giant technology stocks and others. Used pandas to get stock information, visualize different aspects of it, and finally looked at a few ways of analyzing the risk of a stock, based on its previous performance history. Predicted future stock prices through a Monte Carlo method!
-#    
+#
 # ### Questions
-# 
+#
 # In this analysis, I would like to explore the following questions.
-# 
+#
 # 1. What was the change in price of the stock over time?
 # 2. What was the daily return of the stock on average?
 # 3. What was the moving average of the various stocks?
@@ -34,7 +34,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_style('whitegrid')
 get_ipython().magic('matplotlib inline')
-
+print("SURPRISEEEE!")
 
 # In[2]:
 
@@ -50,10 +50,10 @@ from __future__ import division
 
 
 # #### Section 1 - Basic Analysis of Stock Information
-# 
-# 
+#
+#
 # In this section I'll go over how to handle requesting stock information with pandas, and how to analyze basic attributes of a stock.
-# 
+#
 
 # In[3]:
 
@@ -73,7 +73,7 @@ for stock in tech_list:
 
 
 # Quick note: Using globals() is a sloppy way of setting the DataFrame names, but its simple
-# 
+#
 # Let's go ahead and play aorund with the AAPL(Apple) Stock DataFrame to get a feel for the data.
 
 # In[4]:
@@ -117,12 +117,12 @@ AAPL['Volume'].plot(legend=True, figsize=(10,4))
 
 # Now that we've seen the visualizations for the closing price and the volume traded each day for AAPL stock.
 # Let's go ahead and caculate the moving average for the AAPL stock.
-# 
+#
 
 # For more info on the Moving Average(SMA & EMA) check out the following links:
-# 
+#
 # 1.) http://www.investopedia.com/terms/m/movingaverage.asp
-# 
+#
 # 2.) http://www.investopedia.com/articles/active-trading/052014/how-use-moving-average-buy-stocks.asp
 
 # In[19]:
@@ -147,13 +147,13 @@ AAPL[['Close','MA for 10 days','MA for 20 days','MA for 50 days','MA for 100 day
 
 
 # #### Section 2 - Daily Return Analysis
-# 
+#
 
-# Now, that we've done some baseline analysis, let's go ahead and dive a little deeper. We're now going to analyze the risk of the stock. 
-# 
-# 
+# Now, that we've done some baseline analysis, let's go ahead and dive a little deeper. We're now going to analyze the risk of the stock.
+#
+#
 # In order to do so, we need to take a closer look at the daily changes of the stock, and not just its absolute value. Let's go ahead and use pandas to retrieve the daily returns for the APPL stock.
-# 
+#
 
 # In[13]:
 
@@ -213,7 +213,7 @@ tech_returns.head()
 
 
 # Now we can compare the daily percentage return of two stocks to check how correlated. First let's see a stock compared to itself.
-# 
+#
 # ##### GOOGL is a Alphabet Inc Class A Stock.
 
 # In[22]:
@@ -223,8 +223,8 @@ tech_returns.head()
 sns.jointplot('GOOGL','GOOGL',tech_returns,kind='scatter',color='orange')
 
 
-# So now we can see that if two stocks are perfectly (and positivley) correlated with each other a linear relationship bewteen its daily return values should occur. 
-# 
+# So now we can see that if two stocks are perfectly (and positivley) correlated with each other a linear relationship bewteen its daily return values should occur.
+#
 # So let's go ahead and compare Google and Amazon the same way.
 
 # In[29]:
@@ -250,9 +250,9 @@ sns.jointplot('AAPL','MSFT',tech_returns, kind='reg', size=8, color='skyblue')
 
 
 # Intersting, the pearsonr value (officially known as the Pearson product-moment correlation coefficient) can give you a sense of how correlated the daily percentage returns are. You can find more information about it at this link:
-# 
+#
 # Url - http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
-# 
+#
 # But for a quick intuitive sense, check out the picture below.
 
 # In[11]:
@@ -271,8 +271,8 @@ SVG(url='http://upload.wikimedia.org/wikipedia/commons/d/d4/Correlation_examples
 sns.pairplot(tech_returns.dropna(),size=3)
 
 
-# Above we can see all the relationships on daily returns between all the stocks. A quick glance shows an interesting correlation between Google and Amazon daily returns. It might be interesting to investigate that individual comaprison. While the simplicity of just calling sns.pairplot() is fantastic we can also use sns.PairGrid() for full control of the figure, including what kind of plots go in the diagonal, the upper triangle, and the lower triangle. 
-# 
+# Above we can see all the relationships on daily returns between all the stocks. A quick glance shows an interesting correlation between Google and Amazon daily returns. It might be interesting to investigate that individual comaprison. While the simplicity of just calling sns.pairplot() is fantastic we can also use sns.PairGrid() for full control of the figure, including what kind of plots go in the diagonal, the upper triangle, and the lower triangle.
+#
 # Below is an example of utilizing the full power of seaborn to achieve this result.
 
 # In[41]:
@@ -366,7 +366,7 @@ plt.ylabel('Risk')
 # http://matplotlib.org/users/annotations_guide.html
 for label, x, y in zip(rets.columns, rets.mean(), rets.std()):
     plt.annotate(
-        label, 
+        label,
         xy = (x, y), xytext = (50, 50),
         textcoords = 'offset points', ha = 'right', va = 'bottom',
         arrowprops = dict(arrowstyle = 'fancy', connectionstyle = 'arc3,rad=-0.3'))
@@ -377,10 +377,10 @@ for label, x, y in zip(rets.columns, rets.mean(), rets.std()):
 # ### Value at Risk
 
 # Let's go ahead and define a value at risk parameter for our stocks. We can treat value at risk as the amount of money we could expect to lose (aka putting at risk) for a given confidence interval. There's several methods we can use for estimating a value at risk. Let's go ahead and see some of them in action.
-# 
+#
 # #### Value at risk using the "bootstrap" method
 # For this method we will calculate the empirical quantiles from a histogram of daily returns. For more information on quantiles, check out this link: http://en.wikipedia.org/wiki/Quantile
-# 
+#
 # Let's go ahead and repeat the daily returns histogram for Apple stock.
 
 # In[14]:
@@ -426,22 +426,22 @@ rets["MSFT"].quantile(0.05)
 
 # #### Value at Risk using the Monte Carlo method
 # Using the Monte Carlo to run many trials with random market conditions, then we'll calculate portfolio losses for each trial. After this, we'll use the aggregation of all these simulations to establish how risky the stock is.
-# 
+#
 # Let's start with a brief explanation of what we're going to do:
-# 
+#
 # We will use the geometric Brownian motion (GBM), which is technically known as a Markov process. This means that the stock price follows a random walk and is consistent with (at the very least) the weak form of the efficient market hypothesis (EMH): past price information is already incorporated and the next price movement is "conditionally independent" of past price movements.
-# 
+#
 # This means that the past information on the price of a stock is independent of where the stock price will be in the future, basically meaning, you can't perfectly predict the future solely based on the previous price of a stock.
-# 
+#
 
 # Now we see that the change in the stock price is the current stock price multiplied by two terms. The first term is known as "drift", which is the average daily return multiplied by the change of time. The second term is known as "shock", for each time period the stock will "drift" and then experience a "shock" which will randomly push the stock price up or down. By simulating this series of steps of drift and shock thousands of times, we can begin to do a simulation of where we might expect the stock price to be.
-# 
+#
 # For more info on the Monte Carlo method for stocks and simulating stock prices with GBM model ie. geometric Brownian motion (GBM).
-# 
+#
 # check out the following link: http://www.investopedia.com/articles/07/montecarlo.asp
 
 # To demonstrate a basic Monte Carlo method, we will start with just a few simulations. First we'll define the variables we'll be using in the Google stock DataFrame GOOGL
-# 
+#
 
 # In[21]:
 
@@ -472,25 +472,25 @@ sigma = rets.std()['GOOGL']
 
 def stock_monte_carlo(start_price,days,mu,sigma):
     ''' This function takes in starting stock price, days of simulation,mu,sigma, and returns simulated price array'''
-    
+
     # Define a price array
     price = np.zeros(days)
     price[0] = start_price
-    
+
     # Schok and Drift
     shock = np.zeros(days)
     drift = np.zeros(days)
-    
+
     # Run price array for number of days
     for x in range(1,days):
-        
+
         # Calculate Schock
         shock[x] = np.random.normal(loc=mu * dt, scale=sigma * np.sqrt(dt))
         # Calculate Drift
         drift[x] = mu * dt
         # Calculate Price
         price[x] = price[x-1] + (price[x-1] * (drift[x] + shock[x]))
-        
+
     return price
 
 
@@ -510,9 +510,9 @@ start_price = 830.09
 
 for run in range(100):
     plt.plot(stock_monte_carlo(start_price, days, mu, sigma))
-    
+
 plt.xlabel("Days")
-plt.ylabel("Price")  
+plt.ylabel("Price")
 plt.title('Monte Carlo Analysis for Google')
 
 
@@ -530,9 +530,9 @@ start_price = 824.95
 
 for run in range(100):
     plt.plot(stock_monte_carlo(start_price, days, mu, sigma))
-    
+
 plt.xlabel("Days")
-plt.ylabel("Price")  
+plt.ylabel("Price")
 plt.title('Monte Carlo Analysis for Amazon')
 
 
@@ -550,9 +550,9 @@ start_price = 117.10
 
 for run in range(100):
     plt.plot(stock_monte_carlo(start_price, days, mu, sigma))
-    
+
 plt.xlabel("Days")
-plt.ylabel("Price")  
+plt.ylabel("Price")
 plt.title('Monte Carlo Analysis for Apple')
 
 
@@ -570,9 +570,9 @@ start_price = 59.94
 
 for run in range(100):
     plt.plot(stock_monte_carlo(start_price, days, mu, sigma))
-    
+
 plt.xlabel("Days")
-plt.ylabel("Price")  
+plt.ylabel("Price")
 plt.title('Monte Carlo Analysis for Microsoft')
 
 
@@ -590,13 +590,13 @@ runs = 10000
 # Create an empty matrix to hold the end price data
 simulations = np.zeros(runs)
 
-for run in range(runs):    
+for run in range(runs):
     # Set the simulation data point as the last stock price for that run
     simulations[run] = stock_monte_carlo(start_price,days,mu,sigma)[days-1]
 
 
 # Now that we have our array of simulations, we can go ahead and plot a histogram ,as well as use qunatile to define our risk for this stock.
-# 
+#
 # For more info on quantiles, check out this link: http://en.wikipedia.org/wiki/Quantile
 
 # In[54]:
@@ -630,11 +630,11 @@ plt.axvline(x=q, linewidth=4, color='r')
 plt.title(s="Final price distribution for Google Stock(GOOGL) after %s days" % days, weight='bold', color='Y')
 
 
-# Awesome! Now we have looked at the 1% empirical quantile of the final price distribution to estimate the Value at Risk for the Google Stock(GOOGL), which looks to be $17.98 for every investment of 
+# Awesome! Now we have looked at the 1% empirical quantile of the final price distribution to estimate the Value at Risk for the Google Stock(GOOGL), which looks to be $17.98 for every investment of
 # 830.09 (The price of one initial Google Stock).
-# 
+#
 # This basically means for every initial GOOGL stock you purchase you're putting about $17.98 at risk 99% of the time from our Monte Carlo Simulation.
-# 
+#
 
 # ##### Now lets plot remaining Stocks to estimate the VaR with our Monte Carlo Simulation.
 
@@ -650,7 +650,7 @@ runs = 10000
 # Create an empty matrix to hold the end price data
 simulations = np.zeros(runs)
 
-for run in range(runs):    
+for run in range(runs):
     # Set the simulation data point as the last stock price for that run
     simulations[run] = stock_monte_carlo(start_price,days,mu,sigma)[days-1]
 
@@ -700,7 +700,7 @@ runs = 10000
 # Create an empty matrix to hold the end price data
 simulations = np.zeros(runs)
 
-for run in range(runs):    
+for run in range(runs):
     # Set the simulation data point as the last stock price for that run
     simulations[run] = stock_monte_carlo(start_price,days,mu,sigma)[days-1]
 
@@ -750,7 +750,7 @@ runs = 10000
 # Create an empty matrix to hold the end price data
 simulations = np.zeros(runs)
 
-for run in range(runs):    
+for run in range(runs):
     # Set the simulation data point as the last stock price for that run
     simulations[run] = stock_monte_carlo(start_price,days,mu,sigma)[days-1]
 
@@ -788,14 +788,14 @@ plt.title(s="Final price distribution for Microsoft Stock(MSFT) after %s days" %
 # Nice, This basically means for every initial MSFT stock you purchase you're putting about $1.28 at risk 99% of the time from our Monte Carlo Simulation.
 
 # Now lets estiamte the Value at Risk(VaR) for a stock related to other domains.
-# 
-# 
+#
+#
 # We'll estimate the VaR for:
 #  - Johnson & Johnson > JNJ (U.S.: NYSE) [JNJ](http://quotes.wsj.com/JNJ)
 #  - Wal-Mart Stores Inc. > WMT (U.S.: NYSE) [WMT](http://quotes.wsj.com/WMT)
 #  - Nike Inc. > NKE (U.S.: NYSE) [NKE](http://quotes.wsj.com/NKE)
-#  
-# 
+#
+#
 # By using the above methods to get Value at Risk.
 
 # In[5]:
@@ -859,7 +859,7 @@ WMT['Close'].plot(title='Closing Price - WMT',legend=True, figsize=(10,4))
 
 
 # ### Value at risk using the "Bootstrap" method
-# 
+#
 # we will calculate the empirical quantiles from a histogram of daily returns.
 
 # Let's go ahead and use pandas to retrieve the daily returns for the JNJ, WMT & NKE stock.
@@ -931,7 +931,3 @@ sns.distplot(NKE['Daily Return'].dropna(),bins=100,color='B')
 # The 0.05 empirical quantile of NKE stock daily returns is at -0.018. That means that with 95% confidence, our worst daily loss will not exceed 1.8%. If we have a 1 million dollar investment, our one-day 5% VaR is 0.018 * 1,000,000 = $18,000.
 
 # In[ ]:
-
-
-
-
